@@ -75,7 +75,9 @@ public class VKHttpOperation<ResponseType> extends VKAbstractOperation {
                 return;
             }
             response = VKHttpClient.execute(mUriRequest);
-
+        } catch (SecurityException e) {
+            // sometime is thrown in wakeupSession request
+            mLastException = e;
         } catch (IOException e) {
             mLastException = e;
         }

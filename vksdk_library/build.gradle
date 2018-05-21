@@ -1,23 +1,16 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 25
+        targetSdkVersion project.targetSdkVersion
     }
 }
 
-configurations {
-    // Used for correct javadoc generation
-    javadocDeps
-}
-
 dependencies {
-    javadocDeps 'com.android.support:support-annotations:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
+    implementation "com.android.support:appcompat-v7:$support"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp"
 }
-
-apply from: '../maven_push.gradle'

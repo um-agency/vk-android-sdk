@@ -47,9 +47,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,6 +60,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
+
+import okhttp3.OkHttpClient;
+import okhttp3.internal.huc.OkHttpsURLConnection;
 
 /**
  * Class provides configured http client for API request loading
@@ -134,6 +134,11 @@ public class VKHttpClient {
      */
     private static final ExecutorService mBackgroundExecutor = Executors.newFixedThreadPool(3);
     private static final ExecutorService mResponseService = Executors.newSingleThreadExecutor();
+
+    /**
+     * OkHttpClient for performing requests.
+     */
+    /*package*/ static final OkHttpClient okHttpClient = new OkHttpClient();
 
     /**
      * Starts operation in the one of network threads
@@ -271,9 +276,7 @@ public class VKHttpClient {
 
 
         HttpURLConnection createConnection() throws IOException {
-            URL url = this.methodUrl;
-            this.connection = (HttpURLConnection) url.openConnection();
-
+            this.connection = new OkHttpsURLConnection(this.methodUrl, okHttpClient);
             this.connection.setReadTimeout(this.timeout);
             this.connection.setConnectTimeout(this.timeout + 5000);
             this.connection.setRequestMethod("POST");
