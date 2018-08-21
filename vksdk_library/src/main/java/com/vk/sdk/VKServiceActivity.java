@@ -58,6 +58,7 @@ public class VKServiceActivity extends Activity implements DialogInterface.OnDis
     private static final String KEY_SCOPE_LIST = "arg2";
     private static final String KEY_REQUEST = "arg3";
     private static final String KEY_SDK_CUSTOM_INITIALIZE = "arg4";
+    private static final String KEY_FORCE_WEB_VIEW = "arg5";
 
     // ---------- PUBLIC STATIC METHODS ----------
 
@@ -89,13 +90,28 @@ public class VKServiceActivity extends Activity implements DialogInterface.OnDis
     // ---------- PACKAGE METHODS ----------
 
     /**
-     * Starts login process with fragment
+     * Starts login process with activity
+     *
      * @param act       current running activity
      * @param scopeList authorization
      */
     static void startLoginActivity(@NonNull Activity act, @NonNull ArrayList<String> scopeList) {
         Intent intent = createIntent(act.getApplicationContext(), VKServiceType.Authorization);
         intent.putStringArrayListExtra(KEY_SCOPE_LIST, scopeList);
+        act.startActivityForResult(intent, VKServiceType.Authorization.getOuterCode());
+    }
+
+    /**
+     * Starts login process with activity
+     *
+     * @param act               current running activity
+     * @param forceWebView      flag to open webView
+     * @param scopeList         authorization
+     */
+    public static void startLoginActivity(@NonNull Activity act, boolean forceWebView, @NonNull ArrayList<String> scopeList) {
+        Intent intent = createIntent(act.getApplicationContext(), VKServiceType.Authorization);
+        intent.putStringArrayListExtra(KEY_SCOPE_LIST, scopeList);
+        intent.putExtra(KEY_FORCE_WEB_VIEW, forceWebView);
         act.startActivityForResult(intent, VKServiceType.Authorization.getOuterCode());
     }
 
@@ -137,6 +153,10 @@ public class VKServiceActivity extends Activity implements DialogInterface.OnDis
         return getIntent().getLongExtra(KEY_REQUEST, 0);
     }
 
+    private boolean getForceWebView() {
+        return getIntent().getBooleanExtra(KEY_FORCE_WEB_VIEW, false);
+    }
+
     // ---------- ACTIVITY METHODS ----------
 
     @Override
@@ -164,7 +184,8 @@ public class VKServiceActivity extends Activity implements DialogInterface.OnDis
 				if (VKUtil.isAppInstalled(ctx, VK_APP_PACKAGE_ID)
                         && VKUtil.isIntentAvailable(ctx, VK_APP_AUTH_ACTION)
                         && fingerprints.length > 0
-                        && fingerprints[0].equals(VK_APP_FINGERPRINT)) {
+                        && fingerprints[0].equals(VK_APP_FINGERPRINT)
+                        && !getForceWebView()) {
 					if (savedInstanceState == null) {
 						intent = new Intent(VK_APP_AUTH_ACTION, null);
                         intent.setPackage(VK_APP_PACKAGE_ID);

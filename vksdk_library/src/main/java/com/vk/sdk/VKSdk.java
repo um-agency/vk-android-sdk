@@ -229,6 +229,19 @@ public class VKSdk {
     }
 
     /**
+     * Starts authorization process. With flag forcing using UIWebView with standard UINavigationBar.
+     * If VK app is available in the system and forcing is turned off, it will be opened
+     * to request access from user.
+     *
+     * @param activity current running activity
+     * @param scope    array of permissions for your applications
+     */
+    public static void login(@NonNull Activity activity, boolean forceWebView, String... scope) {
+        VKServiceActivity.startLoginActivity(activity, forceWebView, requestedPermissions = preparingScopeList(scope));
+    }
+
+
+    /**
      * Starts authorization process. If VK app is available in the system, it will be opened
      * to request access from user. Otherwise, UIWebView with standard UINavigationBar will be used.
      *
