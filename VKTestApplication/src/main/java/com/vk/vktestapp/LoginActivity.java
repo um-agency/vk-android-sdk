@@ -2,7 +2,7 @@ package com.vk.vktestapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +129,7 @@ public class LoginActivity extends FragmentActivity {
         startActivity(new Intent(this, TestActivity.class));
     }
 
-    public static class LoginFragment extends android.support.v4.app.Fragment {
+    public static class LoginFragment extends androidx.core.app.Fragment {
         public LoginFragment() {
             super();
         }
@@ -148,7 +148,7 @@ public class LoginActivity extends FragmentActivity {
 
     }
 
-    public static class LogoutFragment extends android.support.v4.app.Fragment {
+    public static class LogoutFragment extends androidx.core.app.Fragment {
         public LogoutFragment() {
             super();
         }
